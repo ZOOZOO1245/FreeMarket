@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Feur Beauty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- 아임포트 결제 SDK -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+    
+    <!-- 네이버페이 SDK -->
+    <script type="text/javascript" src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
+    
+    <!-- 삼성페이 SDK -->
+    <script type="text/javascript" src="https://api-std.samsungpay.com/js/sdk/samsungpay.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>FEUR</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="#" id="loginBtn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="cart-page">
+        <section class="cart-header">
+            <h2>Shopping Cart</h2>
+        </section>
+
+        <section class="cart-content">
+            <div class="cart-container">
+                <div class="cart-items">
+                    <!-- 장바구니가 비어있을 때 -->
+                    <div class="empty-cart" style="display: none;">
+                        <p>장바구니가 비어있습니다.</p>
+                        <a href="products.html" class="btn-secondary">쇼핑 계속하기</a>
+                    </div>
+                    
+                    <!-- 장바구니 아이템들 -->
+                    <div class="cart-items-list">
+                        <!-- 아이템들이 여기에 동적으로 로드됩니다 -->
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-details">
+                        <div class="summary-item">
+                            <span>상품금액</span>
+                            <span class="subtotal">₩0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>배송비</span>
+                            <span class="shipping">₩3,000</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>총 결제금액</span>
+                            <span class="total-price">₩0</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <h4>결제 수단 선택</h4>
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="kakaopay" name="payment" value="kakaopay">
+                                <label for="kakaopay">
+                                    <img src="images/kakaopay.png" alt="카카오페이" class="payment-logo">
+                                    카카오페이
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="naverpay" name="payment" value="naverpay">
+                                <label for="naverpay">
+                                    <img src="images/naverpay.png" alt="네이버페이" class="payment-logo">
+                                    네이버페이
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="samsungpay" name="payment" value="samsungpay">
+                                <label for="samsungpay">
+                                    <img src="images/samsungpay.png" alt="삼성페이" class="payment-logo">
+                                    삼성페이
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="card" name="payment" value="card">
+                                <label for="card">
+                                    <i class="fas fa-credit-card"></i>
+                                    신용/체크카드
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary checkout-btn" onclick="processPayment()">결제하기</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- 기존 footer 내용 -->
+    </footer>
+
+    <!-- 카드 결제 모달 수정 -->
+    <div id="cardPaymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCardModal()">&times;</span>
+            <h3>카드 결제</h3>
+            <form id="cardPaymentForm">
+                <div class="form-group">
+                    <label>카드 선택</label>
+                    <select id="cardBank" required>
+                        <option value="">카드를 선택하세요</option>
+                        <option value="shinhan">신한카드</option>
+                        <option value="kb">국민카드</option>
+                        <option value="samsung">삼성카드</option>
+                        <option value="hyundai">현대카드</option>
+                        <option value="bc">BC카드</option>
+                        <option value="lotte">롯데카드</option>
+                        <option value="hana">하나카드</option>
+                        <option value="woori">우리카드</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>카드 번호</label>
+                    <input type="text" id="cardNumber" placeholder="0000-0000-0000-0000" maxlength="19" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>유효기간</label>
+                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CVC</label>
+                        <input type="text" id="cardCvc" placeholder="000" maxlength="3" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">결제 완료</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

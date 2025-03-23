@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Feur Beauty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>FEUR</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="#" id="loginBtn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="products-page">
+        <section class="products-header">
+            <h2>Our Products</h2>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search products..." onkeyup="handleSearch()">
+                <div class="search-results"></div>
+            </div>
+            <div class="category-filters">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="new">New</button>
+            </div>
+        </section>
+
+        <section class="products-grid">
+            <!-- 제품들이 여기에 동적으로 로드됩니다 -->
+        </section>
+    </main>
+
+    <footer>
+        <!-- 기존 footer 내용 -->
+    </footer>
+
+    <!-- 로그인 모달 -->
+    <!-- 기존 로그인 모달 내용 -->
+
+    <script src="script.js"></script>
+</body>
+</html> 
