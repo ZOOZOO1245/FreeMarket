@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev # 기본적으로 dev 환경 사용 (개발 시)
+    include: secret # secret 설정 포함
+
+  # 공통 설정
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      force: true
+
+logging:
+  level:
+    com.freemarket.freemarket: info
+
+# JWT 설정 (시크릿 정보는 application-secret.yml에서 가져옴)
+jwt:
+  access-token-validity-in-seconds: 3600
+  refresh-token-validity-in-seconds: 86400
