@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Google Fonts 추가 -->
+    <title>아름다운 웹사이트</title>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html" class="tag">SKHU</a></h1>
+        <nav>
+            <ul class="nav-left">
+                <li><a href="male-collection.html">남성</a></li>
+                <li><a href="female-collection.html">여성</a></li>
+                <li>컬렉션</li>
+                <li>멤버십 혜택</li>
+            </ul>
+            <ul class="nav-right">
+                <li><a href="#" id="loginBtn">로그인</a></li>
+                <li><a href="#" id="signupBtn">회원가입</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="collection male">
+            <div class="content">
+                <h2>2025 S/S 남성 컬렉션</h2>
+                <a href="male-collection.html" class="button">바로가기</a> 
+            </div>
+        </section>
+        <section class="collection female">
+            <div class="content">
+                <h2>2025 S/S 여성 컬렉션</h2>
+                <a href="female-collection.html" class="button">바로가기</a> 
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>저작권 © 2023 SKHU</p>
+    </footer>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeLogin">&times;</span>
+            <h2>로그인</h2>
+            <form>
+                <label for="loginEmail">이메일:</label>
+                <input type="email" id="loginEmail" required>
+                <label for="loginPassword">비밀번호:</label>
+                <input type="password" id="loginPassword" required>
+                <button type="submit">로그인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 회원가입 모달 -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSignup">&times;</span>
+            <h2>회원가입</h2>
+            <form>
+                <label for="signupId">ID:</label>
+                <input type="text" id="signupId" required>
+                <label for="signupPassword">PW:</label>
+                <input type="password" id="signupPassword" required>
+                <label for="signupPasswordConfirm">PW 재입력:</label>
+                <input type="password" id="signupPasswordConfirm" required>
+                <label for="signupPhone">핸드폰 번호:</label>
+                <input type="text" id="signupPhone" required>
+                <label for="signupEmail">이메일:</label>
+                <input type="email" id="signupEmail" required>
+                <button type="submit">회원가입</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
