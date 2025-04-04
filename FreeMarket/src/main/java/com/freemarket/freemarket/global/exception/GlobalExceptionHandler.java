@@ -1,6 +1,6 @@
 package com.freemarket.freemarket.global.exception;
 
-import com.freemarket.freemarket.global.common.ApiResponse;
+import com.freemarket.freemarket.global.common.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     // BaseException 처리
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleBaseException(BaseException e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleBaseException(BaseException e) {
         log.error("BaseException: {}", e.getMessage(), e);
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -33,12 +33,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(e.getStatus())
-                .body(ApiResponse.error(e.getStatus().value(), e.getMessage(), errorResponse));
+                .body(ResponseDTO.error(e.getStatus().value(), e.getMessage(), errorResponse));
     }
 
     // Spring Security 인증 예외 처리
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleAuthenticationException(AuthenticationException e) {
         log.error("AuthenticationException: {}", e.getMessage(), e);
 
         String message = "인증에 실패했습니다.";
@@ -55,12 +55,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponse.error(HttpStatus.UNAUTHORIZED.value(), message, errorResponse));
+                .body(ResponseDTO.error(HttpStatus.UNAUTHORIZED.value(), message, errorResponse));
     }
 
     // 접근 거부 예외 처리
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleAccessDeniedException(AccessDeniedException e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleAccessDeniedException(AccessDeniedException e) {
         log.error("AccessDeniedException: {}", e.getMessage(), e);
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -72,12 +72,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ApiResponse.error(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다.", errorResponse));
+                .body(ResponseDTO.error(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다.", errorResponse));
     }
 
     // 유효성 검증 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException: {}", e.getMessage(), e);
 
         List<ErrorResponse.FieldError> fieldErrors = e.getFieldErrors().stream()
@@ -97,12 +97,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(HttpStatus.BAD_REQUEST.value(), "입력값이 올바르지 않습니다.", errorResponse));
+                .body(ResponseDTO.error(HttpStatus.BAD_REQUEST.value(), "입력값이 올바르지 않습니다.", errorResponse));
     }
 
     // 바인딩 예외 처리
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleBindException(BindException e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleBindException(BindException e) {
         log.error("BindException: {}", e.getMessage(), e);
 
         List<ErrorResponse.FieldError> fieldErrors = e.getBindingResult().getFieldErrors().stream()
@@ -122,12 +122,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(HttpStatus.BAD_REQUEST.value(), "입력값이 올바르지 않습니다.", errorResponse));
+                .body(ResponseDTO.error(HttpStatus.BAD_REQUEST.value(), "입력값이 올바르지 않습니다.", errorResponse));
     }
 
     // 그 외 모든 예외 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleException(Exception e) {
+    public ResponseEntity<ResponseDTO<ErrorResponse>> handleException(Exception e) {
         log.error("Unexpected Exception: {}", e.getMessage(), e);
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -139,7 +139,7 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류가 발생했습니다.", errorResponse));
+                .body(ResponseDTO.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류가 발생했습니다.", errorResponse));
     }
 
 }
