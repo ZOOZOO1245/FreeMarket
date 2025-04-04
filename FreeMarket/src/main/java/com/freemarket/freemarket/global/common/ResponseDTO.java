@@ -7,15 +7,15 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class ApiResponse<T> {
+public class ResponseDTO<T> {
     private final boolean success;
     private final int status;
     private final String message;
     private final T data;
     private final LocalDateTime timestamp;
 
-    public static <T> ApiResponse<T> success(T data) {
-        return ApiResponse.<T>builder()
+    public static <T> ResponseDTO<T> success(T data) {
+        return ResponseDTO.<T>builder()
                 .success(true)
                 .status(200)
                 .message("요청이 성공했습니다.")
@@ -23,8 +23,8 @@ public class ApiResponse<T> {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
-    public static <T> ApiResponse<T> success(T data, String message) {
-        return ApiResponse.<T>builder()
+    public static <T> ResponseDTO<T> success(T data, String message) {
+        return ResponseDTO.<T>builder()
                 .success(true)
                 .status(200)
                 .message(message)
@@ -33,8 +33,8 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(int status, String message) {
-        return ApiResponse.<T>builder()
+    public static <T> ResponseDTO<T> error(int status, String message) {
+        return ResponseDTO.<T>builder()
                 .success(false)
                 .status(status)
                 .message(message)
@@ -42,8 +42,8 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(int status, String message, T data) {
-        return ApiResponse.<T>builder()
+    public static <T> ResponseDTO<T> error(int status, String message, T data) {
+        return ResponseDTO.<T>builder()
                 .success(false)
                 .status(status)
                 .message(message)
