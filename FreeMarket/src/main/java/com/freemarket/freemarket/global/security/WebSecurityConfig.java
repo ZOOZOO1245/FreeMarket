@@ -30,6 +30,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // 인증 관련 API는 모두 허용
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 허용
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용
+                        .requestMatchers("/api/auth/password/**").permitAll() // 비밀번호 재설정 페이지 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .sessionManagement(session -> session
