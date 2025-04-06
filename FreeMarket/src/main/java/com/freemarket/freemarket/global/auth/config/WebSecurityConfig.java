@@ -1,4 +1,4 @@
-package com.freemarket.freemarket.global.security;
+package com.freemarket.freemarket.global.auth.config;
 
 import com.freemarket.freemarket.global.jwt.JwtFilter;
 import com.freemarket.freemarket.global.jwt.JwtProvider;
