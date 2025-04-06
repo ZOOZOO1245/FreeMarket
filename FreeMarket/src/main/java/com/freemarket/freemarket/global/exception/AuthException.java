@@ -32,6 +32,18 @@ public class AuthException extends BaseException {
         }
     }
 
+    public static class PasswordResetTokenNotFoundException extends AuthException {
+        public PasswordResetTokenNotFoundException() {
+            super("비밀번호 재설정 토큰을 찾을 수 없습니다.", HttpStatus.NOT_FOUND, "PASSWORD_RESET_TOKEN_NOT_FOUND");
+        }
+    }
+
+    public static class PasswordResetTokenExpiredException extends AuthException {
+        public PasswordResetTokenExpiredException() {
+            super("비밀번호 재설정 토큰이 만료되었습니다.", HttpStatus.BAD_REQUEST, "PASSWORD_RESET_TOKEN_EXPIRED");
+        }
+    }
+
     public AuthException(String message, HttpStatus status, String errorCode) {
         super(message, status, errorCode);
     }
