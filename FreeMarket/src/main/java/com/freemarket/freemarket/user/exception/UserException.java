@@ -1,5 +1,6 @@
-package com.freemarket.freemarket.global.exception;
+package com.freemarket.freemarket.user.exception;
 
+import com.freemarket.freemarket.global.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 public class UserException extends BaseException {
@@ -18,6 +19,18 @@ public class UserException extends BaseException {
     public static class UserDisabledException extends UserException {
         public UserDisabledException() {
             super("비활성화된 사용자입니다.", HttpStatus.FORBIDDEN, "USER_DISABLED");
+        }
+    }
+
+    public static class PasswordMismatchException extends UserException {
+        public PasswordMismatchException() {
+            super("현재 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST, "PASSWORD_MISMATCH");
+        }
+    }
+
+    public static class PasswordSameAsOldException extends UserException {
+        public PasswordSameAsOldException() {
+            super("새 비밀번호는 현재 비밀번호와 달라야 합니다.", HttpStatus.BAD_REQUEST, "PASSWORD_SAME_AS_OLD");
         }
     }
 

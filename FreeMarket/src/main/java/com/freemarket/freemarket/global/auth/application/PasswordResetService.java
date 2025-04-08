@@ -5,7 +5,7 @@ import com.freemarket.freemarket.global.auth.domain.PasswordResetToken;
 import com.freemarket.freemarket.global.auth.domain.PasswordResetTokenRepository;
 import com.freemarket.freemarket.global.email.EmailService;
 import com.freemarket.freemarket.global.exception.AuthException;
-import com.freemarket.freemarket.global.exception.UserException;
+import com.freemarket.freemarket.user.exception.UserException;
 import com.freemarket.freemarket.user.domain.User;
 import com.freemarket.freemarket.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
