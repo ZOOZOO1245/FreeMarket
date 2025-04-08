@@ -1,5 +1,7 @@
-package com.freemarket.freemarket.global.security;
+package com.freemarket.freemarket.global.auth.config;
 
+import com.freemarket.freemarket.global.jwt.JwtFilter;
+import com.freemarket.freemarket.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,17 +22,22 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // REST API이므로 CSRF 보안 비활성화
                 .authorizeHttpRequests(authorize -> authorize
                         // 공개 경로 설정
-                        //.requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().permitAll() // 현재는 모든 경로 허용
+                        .requestMatchers("/api/auth/**").permitAll() // 인증 관련 API는 모두 허용
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 허용
+                        .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용
+                        .requestMatchers("/api/auth/password/**").permitAll() // 비밀번호 재설정 페이지 허용
+                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .sessionManagement(session -> session
                         // 세션을 사용하지 않고 JWT 사용
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers.frameOptions(options -> options.sameOrigin())) // H2 콘솔 사용을 위한 설정
+                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

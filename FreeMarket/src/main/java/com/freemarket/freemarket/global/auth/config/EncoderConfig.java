@@ -1,4 +1,4 @@
-package com.freemarket.freemarket.global.security;
+package com.freemarket.freemarket.global.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

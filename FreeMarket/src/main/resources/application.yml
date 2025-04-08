@@ -10,6 +10,20 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com # 사용할 서버
+    port: 587
+    username: ${mail.username} # 메일을 보내는 계정
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+
 server:
   servlet:
     context-path: /
@@ -20,8 +34,3 @@ server:
 logging:
   level:
     com.freemarket.freemarket: info
-
-# JWT 설정 (시크릿 정보는 application-secret.yml에서 가져옴)
-jwt:
-  access-token-validity-in-seconds: 3600
-  refresh-token-validity-in-seconds: 86400
