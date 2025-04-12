@@ -36,14 +36,26 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private UserRole role = UserRole.ROLE_USER;
 
+    // 소셜 로그인 정보 추가
+    private String provider;     // 예: "naver", "google", "kakao"
+    private String providerId;   // 소셜 플랫폼에서 제공하는 고유 사용자 ID
+
     @Builder
-    public User(String email, String password, String name, String phone, boolean enabled, UserRole role) {
+    public User(String email, String password, String name, String phone, boolean enabled, UserRole role, String provider, String providerId) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.enabled = enabled;
         this.role = role != null ? role : UserRole.ROLE_USER;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
+
+    // 사용자 정보 업데이트 (소셜 로그인 시 이름 업데이트 등)
+    public User updateOAuthInfo(String name) {
+        this.name = name;
+        return this;
     }
 
     // 사용자 정보 업데이트
@@ -70,5 +82,10 @@ public class User extends BaseTimeEntity {
     // 사용자 역할 변경
     public void changeRole(UserRole role) {
         this.role = role;
+    }
+
+    public void updateProvider(String provider, String providerId) {
+        this.provider = provider;
+        this.providerId = providerId;
     }
 }
