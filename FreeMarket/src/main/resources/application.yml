@@ -1,7 +1,9 @@
 spring:
   profiles:
     active: dev # 기본적으로 dev 환경 사용 (개발 시)
-    include: secret # secret 설정 포함
+    include:
+      - secret # secret 설정 포함
+      - oauth2
 
   # 공통 설정
   jpa:
@@ -24,6 +26,12 @@ spring:
             required: true
           timeout: 5000
 
+# JWT 설정 (application-secret.yml에 있는 값이 우선적으로 적용)
+jwt:
+  secret: fallbackJwtSecretKeyForDevelopmentPurposesOnly
+  access-token-validity-in-seconds: 1800 # 30분
+  refresh-token-validity-in-seconds: 604800 # 7일
+
 server:
   servlet:
     context-path: /
@@ -31,6 +39,11 @@ server:
       charset: UTF-8
       force: true
 
+#logging:
 logging:
   level:
     com.freemarket.freemarket: info
+    # RestTemplate 로그를 DEBUG 레벨로 설정
+    org.springframework.web.client.RestTemplate: DEBUG
+    # OAuth2 클라이언트 관련 상세 로그 (추가하면 더 자세한 정보 확인 가능)
+    org.springframework.security.oauth2: DEBUG

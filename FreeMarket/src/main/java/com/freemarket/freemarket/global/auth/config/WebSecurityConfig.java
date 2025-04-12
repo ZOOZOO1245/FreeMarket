@@ -2,6 +2,10 @@ package com.freemarket.freemarket.global.auth.config;
 
 import com.freemarket.freemarket.global.jwt.JwtFilter;
 import com.freemarket.freemarket.global.jwt.JwtProvider;
+import com.freemarket.freemarket.global.oauth2.application.CustomOAuth2UserService;
+import com.freemarket.freemarket.global.oauth2.application.CustomOidcUserService;
+import com.freemarket.freemarket.global.oauth2.handler.OAuth2LoginFailureHandler;
+import com.freemarket.freemarket.global.oauth2.handler.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,21 +25,50 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    private final JwtProvider jwtProvider;
+    // OAuth2 관련 빈 주입
+    private final CustomOAuth2UserService customOAuth2UserService; // 네이버용
+    private final CustomOidcUserService customOidcUserService;   // 카카오, 구글용 (OIDC)
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtProvider jwtProvider) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // REST API이므로 CSRF 보안 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                // 세션 관리: STATELESS (JWT 사용)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 요청별 인가 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 공개 경로 설정
-                        .requestMatchers("/api/auth/**").permitAll() // 인증 관련 API는 모두 허용
+                        .requestMatchers("/api/auth/**").permitAll() // 일반 로그인/회원가입 API
+                        .requestMatchers("/oauth2/**").permitAll()            // OAuth2 로그인 시작 URL (e.g., /oauth2/authorization/google)
+                        .requestMatchers("/login/oauth2/code/**").permitAll() // OAuth2 리다이렉션 URI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 허용
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용
-                        .requestMatchers("/api/auth/password/**").permitAll() // 비밀번호 재설정 페이지 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
-                .sessionManagement(session -> session
-                        // 세션을 사용하지 않고 JWT 사용
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2Login(oauth2 -> oauth2
+                        // 사용자 정보 엔드포인트 설정
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService) // OAuth2 (naver)
+                                .oidcUserService(customOidcUserService) // OIDC (google, kakao)
+                        )
+
+                        // 로그인 성공 / 실패 핸들러
+                        .successHandler(oAuth2LoginSuccessHandler) // 성공 시 JWT 발급 및 JSON 응답
+                        .failureHandler(oAuth2LoginFailureHandler) // 실패 시 JSON 에러 응답
+
+                        // .authorizationEndpoint(endpoint -> endpoint // 로그인 페이지 경로 커스텀 시
+                        //         .baseUri("/oauth2/authorization") // 기본값: /oauth2/authorization/{registrationId}
+                        // )
+                        // .redirectionEndpoint(endpoint -> endpoint // 리다이렉션 URI 경로 커스텀 시
+                        //         .baseUri("/login/oauth2/code/*")   // 기본값: /login/oauth2/code/{registrationId}
+                        // )
+                )
                 .headers(headers -> headers.frameOptions(options -> options.sameOrigin())) // H2 콘솔 사용을 위한 설정
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
