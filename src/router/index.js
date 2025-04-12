@@ -1,31 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../views/HomePage.vue'; // HomePage로 수정
+import ReviewSystem from '../views/ReviewSystem.vue'; // ReviewSystem.vue 추가
 
 const routes = [
   {
     path: '/',
-    name: 'HomePage', // HomePage로 수정
-    component: HomePage // HomePage로 수정
+    name: 'HomePage',
+    component: HomePage
   },
   {
     path: '/products',
-    name: 'ProductsPage', // Products
-    component: () => import('../views/ProductsPage.vue') // ProductsPage로 수정
+    name: 'ProductsPage',
+    component: () => import('../views/ProductsPage.vue')
   },
   {
     path: '/register',
-    name: 'RegisterPage', // RegisterPage로 수정
-    component: () => import('../views/RegisterPage.vue') // RegisterPage로 수정
+    name: 'RegisterPage',
+    component: () => import('../views/RegisterPage.vue')
   },
   {
     path: '/login',
-    name: 'LoginPage', // LoginPage 추가
-    component: () => import('../views/LoginPage.vue') // LoginPage.vue 파일을 생성해야 합니다.
+    name: 'LoginPage',
+    component: () => import('../views/LoginPage.vue')
   },
   {
     path: '/signup',
-    name: 'SignupPage', // SignupPage 추가
-    component: () => import('../views/SignupPage.vue') // SignupPage.vue 파일을 생성해야 합니다.
+    name: 'SignupPage',
+    component: () => import('../views/SignupPage.vue')
+  },
+  {
+    path: '/review', // ReviewSystem 경로 추가
+    name: 'ReviewSystem', // ReviewSystem 이름 추가
+    component: ReviewSystem // ReviewSystem 컴포넌트 추가
   }
 ];
 
