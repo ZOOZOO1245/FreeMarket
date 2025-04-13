@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender emailSender;
-
+    // 프론트엔드 비밀번호 재설정 URL 주입
+    @Value("${frontend.reset-password-url}")
+    private String frontendResetPasswordUrl;
     @Async
     public void sendEmail(String to, String subject, String content) {
         try {
@@ -36,7 +39,7 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String to, String resetToken) {
         String subject = "FreeMarket 비밀번호 재설정";
-        String resetUrl = "http://localhost:8080/reset-password?token=" + resetToken;
+        String resetUrl = frontendResetPasswordUrl + "?token=" + resetToken;
 
         String content = """
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
