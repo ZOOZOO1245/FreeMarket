@@ -44,12 +44,20 @@ public class WebSecurityConfig {
                 // 요청별 인가 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 공개 경로 설정
+                        // 정적 리소스, 기본 페이지, 인증/OAuth 관련 API 등 명시적 허용
+                        .requestMatchers("/", "/index.html", "/favicon.ico", "/static/**", "/assets/**", "/js/**", "/css/**" ).permitAll()
+                        // // --- Vue Router가 처리할 경로들 ---
+                        .requestMatchers("/reset-password",  "/oauth/callback").permitAll()
+
                         .requestMatchers("/api/auth/**").permitAll() // 일반 로그인/회원가입 API
                         .requestMatchers("/oauth2/**").permitAll()            // OAuth2 로그인 시작 URL (e.g., /oauth2/authorization/google)
                         .requestMatchers("/login/oauth2/code/**").permitAll() // OAuth2 리다이렉션 URI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 허용
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용
-                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+
+                        // /api 로 시작하는 경로는 인증 요구 (위에서 permitAll된 /api/auth/** 제외)
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll() // 나머지 요청은 허용
                 )
                 .oauth2Login(oauth2 -> oauth2
                         // 사용자 정보 엔드포인트 설정
