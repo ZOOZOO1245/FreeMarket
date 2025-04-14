@@ -1,11 +1,16 @@
 package com.freemarket.freemarket.global.auth.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${file.upload-dir}") private String uploadPath;
+    @Value("${file.thumbnail-dir}") private String thumbnailPath;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -28,5 +33,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:" + uploadPath + "/"); // 경로 끝 '/' 중요
+        registry.addResourceHandler("/thumbnails/**")
+                .addResourceLocations("file:" + thumbnailPath + "/"); // 경로 끝 '/' 중요
     }
 }
