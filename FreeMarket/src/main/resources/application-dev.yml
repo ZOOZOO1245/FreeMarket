@@ -41,3 +41,8 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
     com.example.shop: debug
     org.springframework.security: debug
+
+# 파일 업로드 경로 설정
+file:
+  upload-dir: /Users/taeheon/Documents/school/capstone/images # 원본 이미지 저장 경로
+  thumbnail-dir: /Users/taeheon/Documents/school/capstone/thumbnails # 썸네일 저장 경로
