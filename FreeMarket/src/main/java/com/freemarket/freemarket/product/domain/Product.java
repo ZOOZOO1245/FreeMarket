@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Getter
@@ -39,25 +42,23 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private ProductStatus status = ProductStatus.ACTIVE;
 
-    private String imageUrl;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    public Product(String name, String description, long price, int stock, ProductCategory category, ProductStatus status, String imageUrl, User seller) {
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProductImage> images = new ArrayList<>();
+
+    @Builder
+    public Product(String name, String description, long price, int stock, ProductCategory category, ProductStatus status, User seller) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.category = category;
         this.status = status != null ? status : ProductStatus.ACTIVE;
-        this.imageUrl = imageUrl;
         this.seller = seller;
     }
-
-    @Builder
-
 
     // 재고 관리 메서드
     public void decreaseStock(int quantity) {
@@ -82,13 +83,12 @@ public class Product extends BaseEntity {
     }
 
     // 상품 정보 업데이트
-    public void update(String name, String description, long price, int stock, ProductCategory category, String imageUrl) {
+    public void update(String name, String description, long price, int stock, ProductCategory category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.category = category;
-        this.imageUrl = imageUrl;
 
         // 재고 상태에 따라 상품 상태 업데이트
         if (stock > 0 && this.status == ProductStatus.SOLD_OUT) {
@@ -101,5 +101,25 @@ public class Product extends BaseEntity {
     // 상품 상태 변경
     public void changeStatus(ProductStatus status) {
         this.status = status;
+    }
+
+    // 이미지 추가 / 제거 편의 메서드
+    public void addImage(ProductImage image) {
+        this.images.add(image);
+        image.setProduct(this);
+    }
+
+    public void removeImage(ProductImage image) {
+        this.images.remove(image);
+        image.setProduct(null);
+    }
+
+    // 대표 썸네일 URL 조회
+    public String getRepresentativeThumbnailUrl() {
+        return this.images.stream()
+                .filter(ProductImage::isThumbnail)
+                .findFirst()
+                .map(ProductImage::getThumbnailUrl)
+                .orElse(this.images.isEmpty() ? null : this.images.get(0).getThumbnailUrl());
     }
 }

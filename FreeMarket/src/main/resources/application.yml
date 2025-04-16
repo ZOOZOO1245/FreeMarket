@@ -26,6 +26,12 @@ spring:
             required: true
           timeout: 5000
 
+    # 파일 업로드 설정
+    servlet:
+      multipart:
+        max-file-size: 5MB
+        max-request-size: 50MB
+
 # JWT 설정 (application-secret.yml에 있는 값이 우선적으로 적용)
 jwt:
   secret: fallbackJwtSecretKeyForDevelopmentPurposesOnly
