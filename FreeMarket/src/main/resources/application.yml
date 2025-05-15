@@ -1,0 +1,61 @@
+spring:
+  profiles:
+    active: dev # 기본적으로 dev 환경 사용 (개발 시)
+    include:
+      - secret # secret 설정 포함
+      - oauth2
+
+  # 공통 설정
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  mail:
+    host: smtp.gmail.com # 사용할 서버
+    port: 587
+    username: ${mail.username} # 메일을 보내는 계정
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+
+    # 파일 업로드 설정
+    servlet:
+      multipart:
+        max-file-size: 5MB
+        max-request-size: 50MB
+
+# JWT 설정 (application-secret.yml에 있는 값이 우선적으로 적용)
+jwt:
+  secret: fallbackJwtSecretKeyForDevelopmentPurposesOnly
+  access-token-validity-in-seconds: 1800 # 30분
+  refresh-token-validity-in-seconds: 604800 # 7일
+
+server:
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      force: true
+
+#logging:
+logging:
+  level:
+    com.freemarket.freemarket: info
+    # RestTemplate 로그를 DEBUG 레벨로 설정
+    org.springframework.web.client.RestTemplate: DEBUG
+    # OAuth2 클라이언트 관련 상세 로그 (추가하면 더 자세한 정보 확인 가능)
+    org.springframework.security.oauth2: DEBUG
+
+frontend:
+  oauth:
+    # 소셜 로그인 성공 후 토큰을 전달하며 리다이렉션될 Vue 페이지 경로
+    callback-url: http://localhost:8081/oauth/callback # 예시: Vue 개발 서버 + 콜백 라우트
+  reset-password-url: http://localhost:8081/reset-password # 실제 사용할 프론트엔드 URL로 변경
