@@ -11,5 +11,5 @@
     <booleanAttribute key="show_console_view" value="true"/>
     <booleanAttribute key="show_execution_view" value="true"/>
     <listAttribute key="tasks"/>
-    <stringAttribute key="working_dir" value=""/>
+    <stringAttribute key="working_dir" value="C:\Users\조대현\Desktop\FreeMarket\FreeMarket"/>
 </launchConfiguration>
